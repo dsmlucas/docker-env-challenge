@@ -1,0 +1,73 @@
+version: "3.4"
+volumes:
+  kafka-data:
+    driver: local
+  zookeeper-data:
+    driver: local
+services:
+  zookeeper:
+    image: docker.io/bitnami/zookeeper:3.7
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+    volumes:
+      - "zookeeper-data:/bitnami"
+
+  kafka:
+    image: docker.io/bitnami/kafka:3
+    ports:
+      - "9094:9094"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://${KAFKA_HOST}:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - kafka-data:/bitnami
+
+  kafka-ui:
+    image: tchiotludo/kafkahq
+    depends_on:
+      - kafka
+    environment:
+      KAFKAHQ_CONFIGURATION: |
+        kafkahq:
+          connections:
+            docker-kafka-server:
+              properties:
+                bootstrap.servers: "kafka:9092"
+          security:
+            basic-auth:
+              root:
+                password: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+                roles:
+                  - topic/read
+                  - topic/insert
+                  - topic/delete
+                  - topic/config/update
+                  - node/read
+                  - node/config/update
+                  - topic/data/read
+                  - topic/data/insert
+                  - topic/data/delete
+                  - group/read
+                  - group/delete
+                  - group/offsets/update
+                  - registry/read
+                  - registry/insert
+                  - registry/update
+                  - registry/delete
+                  - registry/version/delete
+            default-roles:
+              - node/read
+    ports:
+      - 8089:8080
