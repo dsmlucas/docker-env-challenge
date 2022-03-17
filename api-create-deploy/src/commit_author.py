@@ -10,22 +10,22 @@ MAX_AUTHORS = 5
 class CommitAuthor():
 
     @staticmethod
-    def create(deploy_id: str):
+    def create(deploy: dict):
         try:
             for i in range(MAX_AUTHORS):
-                id = str(uuid4())
+                key = str(uuid4())
                 payload = {
-                    'deploy_id': deploy_id,
+                    'deploy_id': deploy['id'],
                     'name': 'Author name {}'.format(i),
                     'email': 'author{}@test.local'.format(i),
-                    'commit': id
+                    'commit_hash': str(uuid4())
                 }
 
                 topic = Topic.CREATE_COMMIT_AUTHOR.value
                 producer.send(
                     topic=topic,
                     value=payload,
-                    key=str(id).encode('UTF-8'),
+                    key=key.encode('UTF-8'),
                 )
         except Exception as e:
             error_msg_fmt = 'Unable to submit jobs to topic: {}. {}'

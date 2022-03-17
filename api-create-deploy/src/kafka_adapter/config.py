@@ -14,16 +14,15 @@ class Topic(Enum):
     CREATE_COMMIT_AUTHOR = 'create-commit-author'
 
 
-__BROKER1 = f'{getenv("KAFKA_HOST")}:{getenv("KAFKA_PORT")}'
+__BROKER1 = '{}:{}'.format(getenv("KAFKA_HOST"), getenv("KAFKA_PORT"))
 
 BROKERS = [__BROKER1]
 CLIENT_ID = 'api-create-deploy'
-GROUP_ID = 'group-create-deploy'  # or 'g-create-deploy'
+GROUP_ID = 'g-create-deploy'
 # PARTITIONS = [RoundRobinPartitionAssignor]
 REQUIRED_TOPICS = [
     Topic.CREATE_DEPLOY.value
 ]
-
 
 producer = KafkaProducer(
     bootstrap_servers=BROKERS,

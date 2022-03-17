@@ -1,4 +1,5 @@
 import json
+import random
 import sys
 from kafka import KafkaProducer
 from uuid import uuid4
@@ -21,14 +22,17 @@ def create_jobs():
 
 
 def create_deploy(producer: KafkaProducer):
-    id = str(uuid4())
+    key = str(uuid4())
     payload = {
-        'id': id,
+        'asset_id': random.sample(range(0, 1000), 1)[0],
+        'current_commit': str(uuid4()),
+        'previous_commit': str(uuid4()),
     }
+
     producer.send(
         'create-deploy',
         payload,
-        key=str(id).encode('UTF-8'),
+        key=str(key).encode('UTF-8'),
     )
 
 

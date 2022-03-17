@@ -23,6 +23,7 @@ lib64/
 parts/
 sdist/
 var/
+tmp/
 wheels/
 share/python-wheels/
 *.egg-info/
@@ -97,3 +98,6 @@ logs
 
 # Virtual env
 .venv
+
+# Env files
+.env

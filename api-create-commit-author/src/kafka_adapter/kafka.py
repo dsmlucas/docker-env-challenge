@@ -1,11 +1,11 @@
 from kafka import KafkaConsumer, KafkaAdminClient
 from json import loads
 from time import sleep
-import random
 
 from .config import (
     BROKERS, CLIENT_ID, GROUP_ID, REQUIRED_TOPICS, Topic, producer
 )
+import database
 import logger
 
 
@@ -28,15 +28,9 @@ def consume_topics(node: int):
 
         for msg in consumer:
             try:
-                sleep(1)
-                key = msg.key.decode()
-                key_msg = 'key: {}'.format(key)
+                # TODO - Create 'form' validation
 
-                # FIXME - It's a test
-                if random.choice([False, False, False]):
-                    raise Exception(key_msg)
-
-                logger.topic(msg.topic, 'Success for message ' + key_msg)
+                database.create_deploy_author(msg.value)
             except Exception as e:
                 logger.error(f'Error on reading message {e}')
                 retry_message(msg, Topic(msg.topic))

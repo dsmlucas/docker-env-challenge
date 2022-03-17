@@ -1,5 +1,4 @@
 import datetime as __date
-import os
 
 
 __PURPLE = '\033[95m'
@@ -36,11 +35,6 @@ def warn(text: str):
 def debug(text: str):
     dt = __get_time()
     print(f'{dt} - {__BOLD}[debug]{__END}: {text}')
-
-
-def size(text: str):
-    dt = __get_time()
-    print(f'{dt} - {__BOLD}{__CYAN}[size]{__END}: {text}')
 
 
 def topic(topic, text: str):
