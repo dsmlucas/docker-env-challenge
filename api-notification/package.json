@@ -1,0 +1,39 @@
+{
+  "name": "api-notification",
+  "version": "1.0.0",
+  "main": "dist/app.js",
+  "author": "lucaasdsm@live.com",
+  "license": "MIT",
+  "scripts": {
+    "dev": "NODE_ENV=dev nodemon src/app.ts",
+    "start": "NODE_ENV=prod node dist/app.js",
+    "build": "sucrase ./src -d ./dist --transforms typescript,imports",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint --fix src/**/*.ts",
+    "prettier": "prettier --check \"src/**/*.ts\""
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.4",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.6.0",
+    "sucrase": "^3.20.3",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "handlebars": "^4.7.7",
+    "kafkajs": "^1.16.0",
+    "nodemailer": "^6.7.2",
+    "winston": "^3.6.0",
+    "yup": "^0.32.11"
+  }
+}

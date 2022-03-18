@@ -17,7 +17,8 @@ def create_jobs():
     )
 
     for i in range(MAX_DEPLOYS):
-        create_deploy(producer)
+        # create_deploy(producer)
+        create_notification(producer)
         print('Sent job number:', i)
 
 
@@ -31,6 +32,27 @@ def create_deploy(producer: KafkaProducer):
 
     producer.send(
         'create-deploy',
+        payload,
+        key=str(key).encode('UTF-8'),
+    )
+
+
+def create_notification(producer: KafkaProducer):
+    key = str(uuid4())
+    payload = {
+        'template': 'recover-password',
+        'channels': {
+            'email': {
+                'recipients': ['fagisij754@siberpay.com'],
+            }
+        },
+        'data': {
+            'ma': 'oeeeee'
+        },
+    }
+
+    producer.send(
+        'notification',
         payload,
         key=str(key).encode('UTF-8'),
     )

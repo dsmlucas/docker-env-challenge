@@ -1,0 +1,25 @@
+FROM node:12-alpine AS dist
+
+COPY package*.json ./
+COPY . .
+
+RUN npm install --silent
+RUN npm run build
+
+##############################################################
+
+FROM node:12-alpine
+WORKDIR /usr/src/app
+
+COPY .env.prod .
+COPY package*.json ./
+COPY --from=dist dist /usr/src/app/dist
+COPY --from=dist node_modules /usr/src/app/node_modules
+# COPY --from=dist src/app/templates /usr/src/app/dist/app/templates/
+
+RUN apk update && apk add --no-cache tzdata
+RUN ln -snf /usr/share/zoneinfo/America/Sao_Paulo \
+      /etc/localtime && \
+      echo "America/Sao_Paulo" > /etc/timezone
+
+CMD [ "npm", "run", "start" ]
